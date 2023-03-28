@@ -3,6 +3,8 @@
 ## Introduction
 This repository contains the solution for the Tech Challenge 1. The original Dockerfile was modified to improve the security, reduce the image size, and minimize the attack surface. In this readme, we will discuss the changes made to the original Dockerfile and the reasoning behind them.
 
+New dockerfile: https://github.com/piechucker/Tech-Challenge-1-solution/blob/main/docker-hardening-challenge/docker/dockerfile
+
 ## Changes Made
 The following changes were made to the original Dockerfile:
 
