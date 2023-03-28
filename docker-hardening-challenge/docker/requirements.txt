@@ -1,0 +1,9 @@
+google-crc32c
+google-cloud-container
+google-cloud-storage
+kubernetes
+google-api-python-client
+pysqlite3
+flask
+Flask-login
+flask-session

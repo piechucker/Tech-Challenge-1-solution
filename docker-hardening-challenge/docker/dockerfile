@@ -1,0 +1,53 @@
+# Build stage for regctl
+FROM golang:alpine AS regctl-build
+RUN apk add --no-cache git make gcc musl-dev
+RUN git clone https://github.com/regclient/regclient.git && \
+    cd regclient && \
+    make vendor regctl && \
+    ls -la /go/regclient/bin/
+
+# Base image for app
+FROM python:3.9-slim-buster
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl \
+    ca-certificates \
+    libffi-dev \
+    libssl-dev \
+    make \
+    gcc \
+    musl-dev \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables
+ENV APP_DIR=/app/docker-challenge/
+ENV PATH=$PATH:/google-cloud-sdk/bin:$APP_DIR
+
+# Install Google Cloud SDK
+RUN curl -O https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-latest-linux-x86_64.tar.gz && \
+    tar xzf google-cloud-sdk-latest-linux-x86_64.tar.gz && \
+    rm google-cloud-sdk-latest-linux-x86_64.tar.gz && \
+    gcloud config set metrics/environment github_docker_image && \
+    gcloud components install kubectl && \
+    gcloud components install gke-gcloud-auth-plugin && \
+    gcloud --version
+
+# Copy over files and install app requirements
+COPY . "${APP_DIR}"
+COPY --from=regctl-build /go/regclient/bin/* /usr/local/bin/
+WORKDIR "${APP_DIR}"
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Set Flask environment variables and expose port
+ENV PYTHONUNBUFFERED=TRUE \
+    FLASK_APP=flaskapp.py \
+    FLASK_ENV=production \
+    FLASK_DEBUG=0 \
+    PYTHONPATH=$PYTHONPATH:$APP_DIR
+EXPOSE 5001
+
+# Start Flask app
+CMD ["flask", "run", "--host=0.0.0.0", "--port=5001"]
+
