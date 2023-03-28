@@ -1,4 +1,4 @@
-### Tech-Challenge-1-solution Readme
+#### Tech-Challenge-1-solution Readme
 
 ## Introduction
 This repository contains the solution for the Tech Challenge 1. The original Dockerfile was modified to improve the security, reduce the image size, and minimize the attack surface. In this readme, we will discuss the changes made to the original Dockerfile and the reasoning behind them.
