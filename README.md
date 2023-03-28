@@ -1,6 +1,6 @@
 # Tech-Challenge-1-solution
 
-Switched the base image to python:3.9-slim-buster for a smaller and more secure image.
+*Switched the base image to python:3.9-slim-buster for a smaller and more secure image.*
 The original Dockerfile used the python:latest image as the base image, which is a rather large image and contains many packages that are not necessary for this application. In the new Dockerfile, I used a smaller frolvlad/alpine-python3 image as the base image. This image is based on Alpine Linux, which is a lightweight distribution, and has only the essential packages needed to run Python applications. This change reduces the attack surface of the image and minimizes the risk of vulnerabilities.
 
 Split the Dockerfile into two stages for better layer caching.
